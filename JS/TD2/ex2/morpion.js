@@ -5,17 +5,19 @@ let joueurActuel;
 let j1;
 let j2;
 let choixWinn=0;
+let infoBox;
 
 let isEmpty=(string)=>{
     return string==='' || string===undefined;
 }
 
+//déclancher lorsque les joueurs débutent la partie
 let validate=()=>{
      j1=document.getElementById("J1").value;
      j2=document.getElementById("J2").value;
 
-    if(isEmpty(j1) || isEmpty(j2))
-        alert("Les champs ne sont pas remplis");
+    if(isEmpty(j1) || isEmpty(j2) || j1===j2)
+        alert("Les champs ne sont pas remplis ou invalide.");
     else{
         let form=document.getElementById("Form");
         joueursSymbols={
@@ -29,11 +31,71 @@ let validate=()=>{
 
 }
 
+//affiche le joueur qui doit jouer
+let displayName=(name,infoBox)=>{
+    infoBox.innerText="Joueurs actuel : " + name;
+}
+
+//affichage du résultat final et création des boutons
+let displayWinner=(name,infoBox,tie)=>{
+    let btnReplay=document.createElement("button");
+    let btnRetour=document.createElement("button");
+    let btnBloc=document.createElement("div");
+    let phrase=document.createElement("p");
+    let receptacle=document.getElementById("receptacle");
+
+
+
+    let allButton=receptacle.querySelectorAll("button");
+    btnReplay.onclick=()=>{
+        allButton.forEach(btn=>{
+            btn.innerText="\n";
+        });
+        allButton.forEach(btn=>btn.disabled=false);
+        infoBox.innerHTML='';
+        displayName(name,infoBox);
+    };
+
+    btnRetour.onclick=()=>{
+        document.getElementById("receptacle").innerHTML='';
+        infoBox.innerHTML='';
+        document.getElementById("Form").hidden=false;
+    };
+    infoBox.innerHTML='';
+    //Style des bouton
+        btnRetour.innerText="Retour"
+        btnReplay.innerText="Rejouez"
+
+        btnRetour.margin="auto"
+        btnReplay.margin="auto"
+
+        btnRetour.padding="5"
+        btnReplay.padding="5"
+
+        btnBloc.style.display="flex";
+        btnBloc.style.justifyContent="space-between";
+    ////////////////////
+
+    allButton.forEach(btn=>btn.disabled=true);
+    btnBloc.append(btnRetour,btnReplay);
+    //Message a afficher
+    if(tie===1)
+        phrase.innerText="Bien jouer au gagnant "+name+" !";
+    else
+        phrase.innerText="Aucune gagnant !";
+    infoBox.append(phrase,btnBloc);
+}
+
+
 let createMorpion=()=>{
     //Recuperation des elements necessaire pour la grille
     let receptacle=document.getElementById("receptacle");
     let taille=parseInt((document.querySelector('input[name="size"]:checked').value));
+    let infoBox=document.getElementById("info");
+    displayName(joueurActuel,infoBox);
     if(!document.getElementById("x3").checked){
+        choixWinn=1;
+    }else{
         choixWinn=0;
     }
 
@@ -50,13 +112,21 @@ let createMorpion=()=>{
 
     //Initialisation des boutons
     let allButton=receptacle.querySelectorAll("button");
-    allButton.forEach(btn=>{
-        btn.addEventListener("click",()=>{
-            btn.innerText=joueursSymbols[joueurActuel];
-            if(Winner(allButton,joueursSymbols[joueurActuel],taille,choixWinn)){
-                console.log("yeah");
+     allButton.forEach(btn => {
+       btn.addEventListener("click",()=>{
+            if(btn.innerText!=="\n")
+                alert("Case déjà utilisée");
+            else{
+                btn.innerText=joueursSymbols[joueurActuel];
+                let resGame=Winner(allButton,joueursSymbols[joueurActuel],taille,choixWinn);
+                if(resGame === 1 || resGame === 2){
+                    //alert("BRAVO !!! \n"+joueurActuel+ " tu as gagnés !");
+                    displayWinner(joueurActuel,infoBox,resGame);
+                }else{
+                    exchangePlayer();
+                    displayName(joueurActuel,infoBox);
+                }   
             }
-            exchangePlayer();
         });
     })
 }
@@ -70,86 +140,94 @@ let exchangePlayer = () =>{
     joueurActuel=j1;
 }
 
+let MoreSpace=(allButton)=>{
+    let moreSpace=false;
+    allButton.forEach(btn=>{
+        if(btn.innerText==="\n")
+            moreSpace=true;
+    });
+    return moreSpace;
+}
+
 let Winner=(allButton,symbol,size,choix)=>{
     if(choix===1){
     //Verification des lignes horizontales
-        let horizonline=true;
+        let horizonline=1;
         for(let i=0;i<size;i++){
             for(let y=0;y<size;y++){
                 if(allButton[i+y].innerText!==symbol){
-                    horizonline=false
-                    //console.log("ligne "+i+" false");
+                    horizonline=0
                 }
             }
-            if(horizonline===true)
+            if(horizonline===1)
                 break; 
         }
-        if(horizonline===true)
-            return true;
+        if(horizonline===1)
+            return 1;
 
         //Verification des lignes verticales
         let verticalLine;
         for(let i=0;i<size;i++){
-            verticalLine=true;
+            verticalLine=1;
             for(let y=0;y<size*size;y+=size){
                 if(allButton[i+y].innerText!==symbol)
-                    verticalLine=false;
+                    verticalLine=0;
             }
-            if(verticalLine===true)
+            if(verticalLine===1)
                 break; 
         }
 
-        if(verticalLine===true)
-            return true;
+        if(verticalLine===1)
+            return 1;
 
         //Verification des lignes diagonales (gauche a droite et droite a gauche)
-        let diagonalLine=true;
+        let diagonalLine=1;
         for(let i=0;i<size;i++){
-            //console.log("btn num " + (i*(size+2)) +" : " +  allButton[i*(size+1)].innerText);
-            //console.log(allButton[i*(size+1)].innerText===symbol);
             if(allButton[i*(size+1)].innerText!==symbol)
-                diagonalLine=false;
+                diagonalLine=0;
         }
 
-        if(diagonalLine===true)
-            return true;
+        if(diagonalLine===1)
+            return 1;
         else
-            diagonalLine=true;
+            diagonalLine=1;
 
         for(let i=0;i<size;i++){
-        //console.log("btn num " + (size-1+i*(size-1)));
-            //console.log(allButton[size-1+i*(size-1)].innerText===symbol);
             if(allButton[size-1+i*(size-1)].innerText!==symbol)
-                diagonalLine=false;
+                diagonalLine=0;
         }
-
-        if(diagonalLine===true)
-            return true;
+        if(diagonalLine===1)
+            return 1;
 
 }else{
-    let valide=false;   
+    // Verification pour trois symbole a la suite dans une grille de taille n
+    let valide=0;   
     for(let i=1;i<=size*size;i++){
-        //console.log(" i : "+ i);
         if(i%size!=0 && i%size!=1){
-           // console.log("Check d'une ligne");
             if(allButton[i-1].innerText===symbol && allButton[i].innerText===symbol && allButton[i-2].innerText===symbol)
-                valide=true;
+                valide=1;
         }
         if(i>size && i<=size*(size-1)){
-           // console.log("Check d'une verti");
             if(allButton[i-1].innerText===symbol && allButton[i+size-1].innerText===symbol && allButton[i-size-1].innerText===symbol)
-                valide=true;
+                valide=1;
         }
         if(i%size!=0 && i%size!=1 && i>size && i<=size*(size-1)){
-           // console.log("Check des diago");
             if(allButton[i-1].innerText===symbol && allButton[i-2-size].innerText===symbol && allButton[i+size].innerText===symbol)
-                valide=true;
+                valide=1;
             if(allButton[i-1].innerText===symbol && allButton[i-size].innerText===symbol && allButton[i+size-2].innerText===symbol)
-                valide=true;
+                valide=1;
         }
     }
-    if(valide===true)
-        return true;
+    if(valide===1)
+        return 1;
 }
-return false;
+
+let moreSpace=2;
+allButton.forEach(btn=>{
+    if(btn.innerText==="\n")
+        moreSpace=0;
+});
+
+return moreSpace;
+
 }

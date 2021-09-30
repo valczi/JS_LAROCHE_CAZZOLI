@@ -9,3 +9,23 @@
     justify-content: center;
 
 }
+
+#Jeu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 180;
+    height: 50px;
+    align-self: center;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+}
