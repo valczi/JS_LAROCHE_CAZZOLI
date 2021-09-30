@@ -10,15 +10,26 @@
     <p>Nom j1 : <input type="text" id="J1" id="J1"><p>
     <p>Nom j2 : <input type="text" id="J2" id="J2"><p>
     <p>Taille de votre futur morpion : </p>
-     <div>
-        <input type="radio" id="3x3" name="size" value="3x3" checked>
-        <label for="3x3">3x3</label>
-      </div>
-      
-      <div>
-        <input type="radio" id="8x8" name="size" value="8x8">
-        <label for="8x8">8x8</label>
-      </div>
+
+    <div>
+      <input type="radio" id="3x3" name="size" value="3" checked>
+      <label for="3x3">3x3</label>
+    
+      <input type="radio" id="4x4" name="size" value="4">
+      <label for="8x8">4x4</label>
+
+      <input type="radio" id="5x5" name="size" value="5">
+      <label for="3x3">5x5</label>
+  
+      <input type="radio" id="6x6" name="size" value="6">
+      <label for="8x8">6x6</label>
+
+      <input type="radio" id="7x7" name="size" value="7">
+      <label for="3x3">7x7</label>
+
+      <input type="radio" id="8x8" name="size" value="8">
+      <label for="8x8">8x8</label>
+    </div>
     </br>
 
     <p>Choix dont la partie est gagnée : </p>
@@ -34,7 +45,7 @@
   </br>
       <button onClick="validate()">
         click here
-    </button>
+      </button>
 </div>
 
 <div id="receptacle"></div>
