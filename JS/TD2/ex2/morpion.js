@@ -2,6 +2,7 @@
 
 let joueursSymbols;
 let joueurActuel;
+let joueursScore;
 let j1;
 let j2;
 let choixWinn=0;
@@ -24,6 +25,12 @@ let validate=()=>{
           [j1] : "X",
           [j2] : "O"
         };
+
+        joueursScore={
+            [j1] :0,
+            [j2] :0
+          };
+
         joueurActuel=j1;
         form.hidden=true;
         createMorpion();
@@ -34,6 +41,16 @@ let validate=()=>{
 //affiche le joueur qui doit jouer
 let displayName=(name,infoBox)=>{
     infoBox.innerText="Joueurs actuel : " + name;
+}
+
+let displayScore=()=>{
+    let footer=document.getElementById("footer");
+    footer.innerHTML='';
+    let scoreJ1=document.createElement("p");
+    let scoreJ2=document.createElement("p");
+    scoreJ1.innerText="Score de "+j1+" : "+joueursScore[j1];
+    scoreJ2.innerText="Score de "+j2+" : "+joueursScore[j2];
+    footer.append(scoreJ1,scoreJ2);
 }
 
 //affichage du résultat final et création des boutons
@@ -79,10 +96,13 @@ let displayWinner=(name,infoBox,tie)=>{
     allButton.forEach(btn=>btn.disabled=true);
     btnBloc.append(btnRetour,btnReplay);
     //Message a afficher
-    if(tie===1)
+    if(tie===1){
+        joueursScore[joueurActuel]++;
+        displayScore();
         phrase.innerText="Bien jouer au gagnant "+name+" !";
-    else
+    }else
         phrase.innerText="Aucune gagnant !";
+    
     infoBox.append(phrase,btnBloc);
 }
 
@@ -93,6 +113,7 @@ let createMorpion=()=>{
     let taille=parseInt((document.querySelector('input[name="size"]:checked').value));
     let infoBox=document.getElementById("info");
     displayName(joueurActuel,infoBox);
+    displayScore();
     if(!document.getElementById("x3").checked){
         choixWinn=1;
     }else{
