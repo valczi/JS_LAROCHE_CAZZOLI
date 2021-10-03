@@ -12,13 +12,13 @@ let isEmpty=(string)=>{
     return string==='' || string===undefined;
 }
 
-//déclancher lorsque les joueurs débutent la partie
+//déclanché lorsque les joueurs débutent la partie (appuie sur le bouton validez)
 let validate=()=>{
      j1=document.getElementById("J1").value;
      j2=document.getElementById("J2").value;
 
     if(isEmpty(j1) || isEmpty(j2) || j1===j2)
-        alert("Les champs ne sont pas remplis ou invalide.");
+        alert("Les champs ne sont pas remplis, invalide ou les mêmes.");
     else{
         let form=document.getElementById("Form");
         joueursSymbols={
@@ -43,6 +43,7 @@ let displayName=(name,infoBox)=>{
     infoBox.innerText="Joueurs actuel : " + name;
 }
 
+//affiche les scores
 let displayScore=()=>{
     let footer=document.getElementById("footer");
     footer.innerHTML='';
@@ -141,7 +142,6 @@ let createMorpion=()=>{
                 btn.innerText=joueursSymbols[joueurActuel];
                 let resGame=Winner(allButton,joueursSymbols[joueurActuel],taille,choixWinn);
                 if(resGame === 1 || resGame === 2){
-                    //alert("BRAVO !!! \n"+joueurActuel+ " tu as gagnés !");
                     displayWinner(joueurActuel,infoBox,resGame);
                 }else{
                     exchangePlayer();
@@ -159,15 +159,6 @@ let exchangePlayer = () =>{
     joueurActuel=j2;
   else
     joueurActuel=j1;
-}
-
-let MoreSpace=(allButton)=>{
-    let moreSpace=false;
-    allButton.forEach(btn=>{
-        if(btn.innerText==="\n")
-            moreSpace=true;
-    });
-    return moreSpace;
 }
 
 let Winner=(allButton,symbol,size,choix)=>{
@@ -243,6 +234,8 @@ let Winner=(allButton,symbol,size,choix)=>{
         return 1;
 }
 
+
+//vérification s'il reste des cases disponibles
 let moreSpace=2;
 allButton.forEach(btn=>{
     if(btn.innerText==="\n")
