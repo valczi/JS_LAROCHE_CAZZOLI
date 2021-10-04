@@ -62,7 +62,7 @@ let produceResult=()=>{
         else
             biggest.innerText="Plus gros élément paire : "+array.max(...liste);
 
-
+        liste=liste.sort();
         let resRech=array.dichotomique(liste,parseInt(search.value));
         //console.log("res dicho : " + resRech);
         if(resRech!==-1)
