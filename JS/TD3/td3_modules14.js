@@ -44,7 +44,7 @@ let produceResult=()=>{
     let search=document.getElementById("searchNumber");
 
     listeString.forEach(input => {
-        console.log(input.value);
+        //console.log(input.value);
         if(input.value!=='')
          liste.push(parseInt(input.value));
     });
@@ -64,7 +64,7 @@ let produceResult=()=>{
 
 
         let resRech=array.dichotomique(liste,parseInt(search.value));
-        console.log("res dicho : " + resRech);
+        //console.log("res dicho : " + resRech);
         if(resRech!==-1)
             position.innerText="Position de l'élément : "+(resRech+1);
         else
@@ -74,4 +74,3 @@ let produceResult=()=>{
 }
 btn.addEventListener("click", addElement);
 btn2.addEventListener("click",produceResult);
-
