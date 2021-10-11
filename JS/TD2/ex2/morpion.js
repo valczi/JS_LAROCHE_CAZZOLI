@@ -6,7 +6,6 @@ let joueursScore;
 let j1;
 let j2;
 let choixWinn=0;
-let infoBox;
 
 let isEmpty=(string)=>{
     return string==='' || string===undefined;

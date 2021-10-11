@@ -1,4 +1,4 @@
-import * as array from "./array_util.js";
+import * as array from "./arrayutil.js";
 
 let input=document.getElementById("chiffre");
 let inputs=document.getElementById("inputNumber");
