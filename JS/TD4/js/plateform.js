@@ -111,7 +111,6 @@ let showMorpion = () => {
                 //j'assigne le symbol du joueur actuel si le résultat est différent de 3
                 if (result !== 3)
                     button.innerText = morp.symbols[morp.joueurActuel];
-
                 // 0 rien ne se passe // 1 victoire du joueur présent // 2 égalité  // 3 case déjà utilisé
                 if (result === 1) {
                     victoire(morp);

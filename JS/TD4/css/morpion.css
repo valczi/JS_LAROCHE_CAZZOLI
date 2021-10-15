@@ -8,6 +8,7 @@ html {
 body{
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
+    text-shadow: 1px 1px 2px black;;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -27,7 +28,7 @@ button{
     border: solid 2px #b6b5db;
     border-radius: 10px;
     color: #FFC300;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 #receptacle{
@@ -39,14 +40,18 @@ opacity: 0.7;
 }
 
 #Jeu{
-    margin: 200px 0 0 0;
-    height: 500px;
-    width: 500px;
+    margin: 15%;
+    height: auto;
+    width: auto;
     display: flex;
     border-radius: 10px;
     flex-direction: column;
     justify-content: center;
     align-self: center;
+}
+
+#Jeu button{
+    font-weight: 900;
 }
 
 #Jeu p,div{
@@ -57,8 +62,8 @@ div{
 }
 
 #Form{
-    margin: 250px 0 0 0;
     position: fixed;
+    margin: 15%;
     align-self: center;
     border: solid 2px ;
     padding: 20px;
@@ -78,5 +83,6 @@ div{
 footer{
     display: flex;
     justify-content: space-evenly;
-    margin: 0;
+    padding: 5px;
+    position: relative;
 }

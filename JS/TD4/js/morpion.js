@@ -68,6 +68,11 @@ export class morpion {
     return this.#symbols;
   }
 
+  get nbcoups() {
+    return this.#nbcoups;
+  }
+
+
   set joueur1(value) {
     if (typeof value === 'string' || value instanceof String)
       this.#joueur1 = value;
@@ -104,11 +109,10 @@ export class morpion {
   }
 
   joueSur(y, x) {
-    let retour;
     if (this.#morpionGrille[y][x] === ' ') {
       this.#morpionGrille[y][x] = this.#symbols[this.#joueurActuel];
-      const victoire = this.aGagne(y, x);
       this.#nbcoups++;
+      const victoire = this.aGagne(y, x);
       // 1 victoire du joueur présent // 2 égalité // 3 case déja utilisé
       if (victoire) {
         this.increaseScoreJA();
@@ -132,47 +136,54 @@ export class morpion {
   joueurAdverse() {
     return (this.#joueurActuel === this.#joueur1 ? this.#joueur2 : this.#joueur1);
   }
+
   aGagne(y, x) {
-    const aTrouver = this.#symbols[this.#joueurActuel].repeat(3);
+    //pas besoin de vérifier si l'ont a pas atteint le nombre minimal de coup pour gagner
+    if (this.#nbcoups >= 5) {
+      const aTrouver = this.#symbols[this.#joueurActuel].repeat(3);
 
-    // gagné en ligne ? : concaténation de la ligne, et recherche de la sous-chaîne gagnante
-    let ligne = '';
-    this.#morpionGrille[y].forEach(element => (ligne += element));
-    if (ligne.indexOf(aTrouver) >= 0) {
+      // gagné en ligne ? : concaténation de la ligne, et recherche de la sous-chaîne gagnante
+      let ligne = '';
+      this.#morpionGrille[y].forEach(element => (ligne += element));
+      if (ligne.indexOf(aTrouver) >= 0) {
         return true;
-    }
+      }
 
-    // gagné en colonne ? : concaténation de la colonne et recherche de la sous-chaîne gagnante
-    let col = '';
-    this.#morpionGrille.forEach(element => (col += element[x]));
-    if (col.indexOf(aTrouver) >= 0) {
+      // gagné en colonne ? : concaténation de la colonne et recherche de la sous-chaîne gagnante
+      let col = '';
+      this.#morpionGrille.forEach(element => (col += element[x]));
+      if (col.indexOf(aTrouver) >= 0) {
         return true;
-    }
+      }
 
-    // gagné diagonale
-    if (x === y) {
-        let diagonale = '';
-        for (let lc = 0; lc < this.#taille; lc++) {
-            diagonale += this.#morpionGrille[lc][lc];
-        }
-        if (diagonale.indexOf(aTrouver) >= 0) {
+      // gagné diagonale
+      let diagonale = '';
+      for (let x = 0; x < this.#taille; x++) {
+        for (let y = 0; y < this.#taille; y++) {
+          if (x <= this.#taille - 3 && y <= this.#taille - 3)
+            diagonale += this.#morpionGrille[x][y] + this.#morpionGrille[x + 1][y + 1] + this.#morpionGrille[x + 2][y + 2];
+          if (diagonale.indexOf(aTrouver) >= 0) {
             return true;
+          }
+          diagonale = '';
         }
-    }
+      }
 
-    // gagné diag inverse
-    if (x === this.#taille - (y + 1)) {
-        let inverse = '';
-        for (let lc = 0; lc < this.#taille; lc++) {
-            inverse += this.#morpionGrille[lc][this.#taille - (lc + 1)];
-        }
-        if (inverse.indexOf(aTrouver) >= 0) {
+      // gagné diag inverse
+      let inverse = '';
+      for (let x = 0; x < this.#taille; x++) {
+        for (let y = 0; y < this.#taille; y++) {
+          if (x <= this.#taille - 3 && y >= 2)
+            inverse += this.#morpionGrille[x][y] + this.#morpionGrille[x + 1][y - 1] + this.#morpionGrille[x + 2][y - 2];
+          if (inverse.indexOf(aTrouver) >= 0) {
             return true;
+          }
+          inverse = '';
         }
+      }
     }
-
     return false;
-}
+  }
 
 }
 
