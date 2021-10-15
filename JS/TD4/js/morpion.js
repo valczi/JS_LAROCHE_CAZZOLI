@@ -104,11 +104,11 @@ export class morpion {
   }
 
   joueSur(y, x) {
+    let retour;
     if (this.#morpionGrille[y][x] === ' ') {
       this.#morpionGrille[y][x] = this.#symbols[this.#joueurActuel];
       const victoire = this.aGagne(y, x);
       this.#nbcoups++;
-      this.changeJA();
       // 1 victoire du joueur présent // 2 égalité // 3 case déja utilisé
       if (victoire) {
         this.increaseScoreJA();
@@ -120,6 +120,7 @@ export class morpion {
       return 3;
     }
   }
+
   //échange des joueurs
   changeJA() {
     if (this.#joueurActuel === this.#joueur1) {

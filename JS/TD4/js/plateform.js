@@ -40,7 +40,7 @@ let showScore = () => {
     let info = document.getElementById("info");
     info.hidden = false;
     info.innerHTML = '';
-    info.innerText = "Score de " + morp.joueur1 + " : " + morp.score[morp.joueur1] + "   Score de " + morp.joueur2 + " : " + morp.score[morp.joueur2];
+    info.innerText = "Score de " + morp.joueur1 + " : " + morp.score[morp.joueur1] + "       Score de " + morp.joueur2 + " : " + morp.score[morp.joueur2];
 }
 
 let disableButton = () => {
@@ -108,17 +108,21 @@ let showMorpion = () => {
             div.appendChild(button);
             button.addEventListener("click", () => {
                 let result = morp.joueSur(i, y);
-                //j'affiche le joueur adverse car j'échange déjà les joueurs dans joueSur
-                button.innerText = morp.symbols[morp.joueurAdverse()];
+                //j'assigne le symbol du joueur actuel si le résultat est différent de 3
+                if (result !== 3)
+                    button.innerText = morp.symbols[morp.joueurActuel];
+
                 // 0 rien ne se passe // 1 victoire du joueur présent // 2 égalité  // 3 case déjà utilisé
                 if (result === 1) {
                     victoire(morp);
                 } else if (result === 2) {
                     egalite();
                 } else if (result === 3) {
-                    alert("case déjà utilisé");
+                    alert("case déjà utilisée");
+                } else {
+                    morp.changeJA();
                 }
-            })
+            });
         }
     }
 }
