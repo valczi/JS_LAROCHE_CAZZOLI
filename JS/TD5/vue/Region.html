@@ -2,31 +2,36 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="../css/morpion.css">
+  <link rel="stylesheet" href="../css/Region.css">
   <title>Mon Morpion</title>
 </head>
 <body>
-<select id='region'>
+<div id="selection">
+  <select id='region'>
 
-</select>
+  </select>
 
-<select id='departement'>
+  <select id='departement'>
 
-</select>
+  </select>
 
-<select id='commune'>
+  <select id='commune'>
 
-</select>
+  </select>
 
+  <form action="Meteo.html" method="get" class="form-example">
+    <input type="submit" value="View Weather">
+  </form>
+
+</div>
 <div id="pop"></div>
+<div id="popTotal"></div>
 <table id="tableau">
-    <thead>
       <tr>
           <th >Nom</th>
           <th >Code Postal</th>
            <th >Population</th>
       </tr>
-  </thead>
   <tbody id = "donnee">
       <tr>
           <td>The table body</td>
@@ -35,9 +40,6 @@
       </tr>
   </tbody>
 </table>
-<div id="popTotal"></div>
-
-
 
 
 

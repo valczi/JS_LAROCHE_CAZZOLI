@@ -9,10 +9,11 @@
 
 
 let getRegion = async(Display)=>{
-    return fetch('https://geo.api.gouv.fr/regions',{
+     fetch('https://geo.api.gouv.fr/regions',{
         method:'GET',
     }).then(response=>{
-        return response.json().then(response =>{
+         response.json().then(response =>{
+            localStorage.setItem("Region",JSON.stringify(response));
             let first=response[0];
             prommesseDepartement = getDepartement(displayDepartement,first.code);
             response.forEach(element => {
@@ -21,7 +22,7 @@ let getRegion = async(Display)=>{
                 option.innerText=element.nom;
                 Display.append(option);
             });
-            return response;
+             response;
         })
     }).catch(err=>console.log("Erreur : "+ err));
 }
@@ -29,12 +30,11 @@ let getRegion = async(Display)=>{
 
 let getDepartement = async(Display,Region)=>{
     Display.innerHTML='';
-    return fetch('https://geo.api.gouv.fr/regions/'+Region+'/departements',{
+     fetch('https://geo.api.gouv.fr/regions/'+Region+'/departements',{
        method:'GET',
    }).then(response=>{
-
-       return response.json().then(response =>{
-
+        response.json().then(response =>{
+        localStorage.setItem("Departement",JSON.stringify(response));
         let first=response[0];
         prommesseCommunes = getCommune(displayCommune,first.code);
            response.forEach(element => {
@@ -44,10 +44,11 @@ let getDepartement = async(Display,Region)=>{
                 Display.append(option);
            });
 
-           return response;
+            response;
        })
    }).catch(err=>console.log("Erreur : "+ err));
 }
+
 
 let displaySameCode=(firstCommune,element)=>{
     let elementFiltered=[];
@@ -57,7 +58,7 @@ let displaySameCode=(firstCommune,element)=>{
     let totalpop=0;
     donnee.innerHTML='';
     
-    pop.innerText=firstCommune.population;
+    pop.innerText="Population de "+ firstCommune.nom + " : " +firstCommune.population;
 
     elementFiltered=element.filter(Commune=>
         Commune.codesPostaux[0].includes(code)
@@ -77,17 +78,18 @@ let displaySameCode=(firstCommune,element)=>{
             totalpop+=Element.population;
         }
     });
-    popTotal.innerText=parseInt(totalpop);
+    popTotal.innerText="Population total : " + parseInt(totalpop);
 }
 
 let getCommune = async(Display,departement)=>{
     Display.innerHTML='';
-    return fetch('https://geo.api.gouv.fr/departements/'+departement+'/communes',{
+     fetch('https://geo.api.gouv.fr/departements/'+departement+'/communes',{
        method:'GET',
    }).then(response=>{
-       return response.json().then(response =>{
+        response.json().then(response =>{
+        localStorage.setItem("Communes",JSON.stringify(response));
         let first=response[0];
-
+        localStorage.setItem("CommuneChoisis",JSON.stringify(first));
         displaySameCode(first,response);
            response.forEach(element => {
                 let option=document.createElement('option');
@@ -95,33 +97,38 @@ let getCommune = async(Display,departement)=>{
                 option.innerText=element.nom;
                 Display.append(option);
            });
-           return response;
+            response;
        })
    }).catch(err=>console.log("Erreur : "+ err));
 }
 
+
+
 prommesseRegion = await getRegion(displayRegion);
 
-displayDepartement.onclick=()=>{
+displayDepartement.onchange=()=>{
     let departement=displayDepartement.value;
-    prommesseCommunes = getCommune(displayCommune,departement);
+    getCommune(displayCommune,departement);
 }
 
-displayRegion.onclick=()=>{
+displayRegion.onchange=()=>{
     let region=displayRegion.value;
-    prommesseDepartement = getDepartement(displayDepartement,region);
+    getDepartement(displayDepartement,region);
   //  displayDepartement.onclick();
 }
 
-displayCommune.onclick=()=>{
+displayCommune.onchange=()=>{
 
-    prommesseCommunes.then(response=>{
-            console.log(response);
-            let commune=response.filter(commune=>commune.code===displayCommune.value);
-                displaySameCode(commune[0],response);
-
-    });
+    let communes=JSON.parse(localStorage.getItem("Communes"));
+    let commune=communes.filter(commune=>commune.code===displayCommune.value);
+    localStorage.setItem("CommuneChoisis",JSON.stringify(commune[0]));
+    displaySameCode(commune[0],communes);
 }
+
+let a=localStorage.getItem("Region");
+
+
+
 
 
 
