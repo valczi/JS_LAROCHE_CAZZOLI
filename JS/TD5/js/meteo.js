@@ -21,10 +21,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 let getMeteo = async()=>{
     fetch("https://api.openweathermap.org/data/2.5/weather?q="+commune.nom+","+commune.codeRegion+",&appid=0a7f4f67df74b7d6b295839cc37a08f4&units=metric&lang=fr", {
       "method": "GET",
-    }).then(response => {
+    }).then(async response => {
         response.json().then(response=>{
-            showWeather(response);
-            showOnMap(response);
+            setSurface(response);
         })
     })
     .catch(err => {
@@ -32,8 +31,23 @@ let getMeteo = async()=>{
     });
 }
 
-let showWeather=(ville)=>{
 
+let setSurface = async(response1)=>{
+  fetch("https://geo.api.gouv.fr/communes?nom="+commune.nom+"&fields=code,nom,contour", {
+    "method": "GET",
+  }).then(response => {
+      response.json().then(response=>{
+        console.log(response);
+        showWeather(response1);
+        showOnMap(response1,response[0]["contour"]);
+      })
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+let showWeather=(ville)=>{
     titre.innerText="Pour la ville de " + commune.nom+ " : " ;
     infoTemp.innerText="Température : " + ville.main.temp+"c°";
     infoFelt.innerText="Température ressenti : " +ville.main.feels_like+"c°";
@@ -44,8 +58,9 @@ let showWeather=(ville)=>{
     infoHumidity.innerText="Humidité : " + ville.main.humidity+"%";
 }
 
-let showOnMap=(ville)=>{
+let showOnMap=(ville,contour)=>{
   mymap.panTo(new L.LatLng(ville.coord.lat, ville.coord.lon));
+  L.geoJson(contour).addTo(mymap);
 }
 
 
