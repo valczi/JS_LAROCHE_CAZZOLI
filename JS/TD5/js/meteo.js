@@ -18,12 +18,12 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(mymap);
 
 
-let getMeteo = async()=>{
-    fetch("https://api.openweathermap.org/data/2.5/weather?q="+commune.nom+","+commune.codeRegion+",&appid=0a7f4f67df74b7d6b295839cc37a08f4&units=metric&lang=fr", {
+let getMeteo = async(center)=>{
+    fetch("https://api.openweathermap.org/data/2.5/weather?lat="+center[1]+"&lon="+center[0]+"&appid=0a7f4f67df74b7d6b295839cc37a08f4&units=metric&lang=fr", {
       "method": "GET",
     }).then(async response => {
         response.json().then(response=>{
-            setSurface(response);
+            showWeather(response);
         })
     })
     .catch(err => {
@@ -32,14 +32,13 @@ let getMeteo = async()=>{
 }
 
 
-let setSurface = async(response1)=>{
-  fetch("https://geo.api.gouv.fr/communes?nom="+commune.nom+"&fields=code,nom,contour", {
+let setSurface = async()=>{
+  //Obligé de récupérer le centre car l'api openweather se trompe sur la commune 
+  fetch("https://geo.api.gouv.fr/communes?code="+commune.code+"&fields=code,nom,contour,centre", {
     "method": "GET",
   }).then(response => {
       response.json().then(response=>{
-        console.log(response);
-        showWeather(response1);
-        showOnMap(response1,response[0]["contour"]);
+        showOnMap(response[0]["centre"]["coordinates"],response[0]["contour"]);
       })
   })
   .catch(err => {
@@ -47,25 +46,31 @@ let setSurface = async(response1)=>{
   });
 }
 
-let showWeather=(ville)=>{
-    titre.innerText="Pour la ville de " + commune.nom+ " : " ;
-    infoTemp.innerText="Température : " + ville.main.temp+"c°";
-    infoFelt.innerText="Température ressenti : " +ville.main.feels_like+"c°";
-    infoMin.innerText="Température minimale : " + ville.main.temp_min+"c°";
-    infoMax.innerText="Température maximale : " + ville.main.temp_max+"c°";
-    infoFelt.innerText="Température ressentie : " + ville.main.feels_like+"c°";
-    infoTime.innerText="Description du temps : " + ville.weather[0].description;
-    infoHumidity.innerText="Humidité : " + ville.main.humidity+"%";
-}
 
-let showOnMap=(ville,contour)=>{
-  mymap.panTo(new L.LatLng(ville.coord.lat, ville.coord.lon));
+
+let showOnMap=(centre,contour)=>{
+  console.log(centre);
+  mymap.panTo(new L.LatLng(centre[1], centre[0]));
   L.geoJson(contour).addTo(mymap);
+  getMeteo(centre);
+
+
+}
+
+let showWeather=(ville)=>{
+  titre.innerText="Pour la ville de " + commune.nom+ " : " ;
+  infoTemp.innerText="Température : " + ville.main.temp+"c°";
+  infoFelt.innerText="Température ressenti : " +ville.main.feels_like+"c°";
+  infoMin.innerText="Température minimale : " + ville.main.temp_min+"c°";
+  infoMax.innerText="Température maximale : " + ville.main.temp_max+"c°";
+  infoFelt.innerText="Température ressentie : " + ville.main.feels_like+"c°";
+  infoTime.innerText="Description du temps : " + ville.weather[0].description;
+  infoHumidity.innerText="Humidité : " + ville.main.humidity+"%";
 }
 
 
 
 
-await getMeteo();
+await setSurface();
 
 
