@@ -14,24 +14,25 @@ let allH2=$('h2');
 let nb=1;
 
 $.each(allH2,function(){
-    let h2=$(this)[0];
-    h2.innerText=h2.innerText.toUpperCase();
-    let text = h2.innerHTML.toUpperCase();
-    h2.innerHTML="Article "+nb+" - "
+
+    let h2=$(this);
+    let text = h2.text();
+
+    h2.text("Article "+nb+" - ");
 
     text = text.split(" ");
 
-    h2.innerHTML=h2.innerHTML+text[3];
+    h2.text(h2.text()+text[3]);
 
     if(nb===4){
         let listUl=[];
         let h2NextUl=h2;
-        console.log($(h2).next());
         
         while(h2NextUl.tagName!=="UL")
             h2NextUl=$(h2NextUl).next()[0];
 
         let previous =$(h2NextUl).prev();
+
 
         while(h2NextUl.tagName==="UL"){
             listUl.push(h2NextUl);
