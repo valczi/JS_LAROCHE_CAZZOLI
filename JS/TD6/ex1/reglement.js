@@ -4,16 +4,17 @@ titre.text("Article 0 - règle");
 let body=document.body;
 
 let content=$("<p />");
-content.text("Il est interdit de vous doublez !");
 
 $("body h2:nth-child(1)").before(titre);
 
-//let allH2=document.querySelectorAll("h2");
+content.text("Il est interdit de vous doublez !");
+titre.after(content);
+
 let allH2=$('h2');
 let nb=1;
+
 $.each(allH2,function(){
     let h2=$(this)[0];
-    // h2.className="capital";
     h2.innerText=h2.innerText.toUpperCase();
     let text = h2.innerHTML.toUpperCase();
     h2.innerHTML="Article "+nb+" - "
@@ -31,7 +32,6 @@ $.each(allH2,function(){
             h2NextUl=$(h2NextUl).next()[0];
 
         let previous =$(h2NextUl).prev();
-        //console.log($(h2NextUl).prev());
 
         while(h2NextUl.tagName==="UL"){
             listUl.push(h2NextUl);
@@ -48,11 +48,11 @@ $.each(allH2,function(){
 
 
     if(nb%2===0){
-        let h2next=h2.nextElementSibling;
+        let h2next=$(h2).next()[0];
         while(h2next.tagName !== "H2" && h2next.tagName!=="SCRIPT")
         {
-            h2next.style.backgroundColor='lightblue';
-            h2next=h2next.nextElementSibling;
+            $(h2next).css("background-color", "lightblue");
+            h2next=$(h2next).next()[0];
         }
     }
 
